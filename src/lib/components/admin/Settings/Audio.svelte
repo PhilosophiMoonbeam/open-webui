@@ -39,6 +39,7 @@
 	let STT_ENGINE = '';
 	let STT_MODEL = '';
 	let STT_WHISPER_MODEL = '';
+	let STT_LANGUAGE = '';
 
 	let STT_WHISPER_MODEL_LOADING = false;
 
@@ -103,7 +104,8 @@
 				OPENAI_API_KEY: STT_OPENAI_API_KEY,
 				ENGINE: STT_ENGINE,
 				MODEL: STT_MODEL,
-				WHISPER_MODEL: STT_WHISPER_MODEL
+				WHISPER_MODEL: STT_WHISPER_MODEL,
+				LANGUAGE: STT_LANGUAGE
 			}
 		});
 
@@ -143,6 +145,7 @@
 			STT_ENGINE = res.stt.ENGINE;
 			STT_MODEL = res.stt.MODEL;
 			STT_WHISPER_MODEL = res.stt.WHISPER_MODEL;
+			STT_LANGUAGE = res.stt.LANGUAGE || '';
 		}
 
 		await getVoices();
@@ -276,6 +279,16 @@
 									</svg>
 								{/if}
 							</button>
+						</div>
+
+						<div class="mt-2 flex w-full">
+							<div class="flex-1 mr-2">
+								<input
+									class="w-full rounded-lg py-2 px-4 text-sm bg-gray-50 dark:text-gray-300 dark:bg-gray-850 outline-none"
+									placeholder={$i18n.t('Language code (e.g., en)')}
+									bind:value={STT_LANGUAGE}
+								/>
+							</div>
 						</div>
 
 						<div class="mt-2 mb-1 text-xs text-gray-400 dark:text-gray-500">

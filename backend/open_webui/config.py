@@ -1846,6 +1846,12 @@ AUDIO_STT_MODEL = PersistentConfig(
     os.getenv("AUDIO_STT_MODEL", ""),
 )
 
+AUDIO_STT_LANGUAGE = PersistentConfig(
+    "AUDIO_STT_LANGUAGE",
+    "audio.stt.language",
+    os.getenv("AUDIO_STT_LANGUAGE", ""),
+)
+
 AUDIO_TTS_OPENAI_API_BASE_URL = PersistentConfig(
     "AUDIO_TTS_OPENAI_API_BASE_URL",
     "audio.tts.openai.api_base_url",

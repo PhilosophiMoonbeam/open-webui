@@ -138,6 +138,7 @@ class STTConfigForm(BaseModel):
     ENGINE: str
     MODEL: str
     WHISPER_MODEL: str
+    LANGUAGE: str | None = None
 
 
 class AudioConfigUpdateForm(BaseModel):
@@ -165,6 +166,7 @@ async def get_audio_config(request: Request, user=Depends(get_admin_user)):
             "ENGINE": request.app.state.config.STT_ENGINE,
             "MODEL": request.app.state.config.STT_MODEL,
             "WHISPER_MODEL": request.app.state.config.WHISPER_MODEL,
+            "LANGUAGE": request.app.state.config.STT_LANGUAGE,
         },
     }
 
@@ -190,6 +192,7 @@ async def update_audio_config(
     request.app.state.config.STT_ENGINE = form_data.stt.ENGINE
     request.app.state.config.STT_MODEL = form_data.stt.MODEL
     request.app.state.config.WHISPER_MODEL = form_data.stt.WHISPER_MODEL
+    request.app.state.config.STT_LANGUAGE = form_data.stt.LANGUAGE
 
     if request.app.state.config.STT_ENGINE == "":
         request.app.state.faster_whisper_model = set_faster_whisper_model(
@@ -214,6 +217,7 @@ async def update_audio_config(
             "ENGINE": request.app.state.config.STT_ENGINE,
             "MODEL": request.app.state.config.STT_MODEL,
             "WHISPER_MODEL": request.app.state.config.WHISPER_MODEL,
+            "LANGUAGE": request.app.state.config.STT_LANGUAGE,
         },
     }
 
@@ -465,7 +469,11 @@ def transcribe(request: Request, file_path):
             )
 
         model = request.app.state.faster_whisper_model
-        segments, info = model.transcribe(file_path, beam_size=5)
+        segments, info = model.transcribe(
+            file_path, 
+            beam_size=5,
+            language=request.app.state.config.STT_LANGUAGE if request.app.state.config.STT_LANGUAGE else None
+        )
         log.info(
             "Detected language '%s' with probability %f"
             % (info.language, info.language_probability)
